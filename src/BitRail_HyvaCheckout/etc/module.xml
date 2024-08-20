@@ -4,6 +4,7 @@
         <sequence>
             <module name="BitRail_PaymentGateway"/>
             <module name="Hyva_CompatModuleFallback"/>
+            <module name="Hyva_Checkout"/>
         </sequence>
     </module>
 </config>

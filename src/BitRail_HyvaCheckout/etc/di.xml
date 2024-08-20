@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <!-- Configure session and other dependencies if needed -->
+
     <type name="BitRail\HyvaCheckout\Magewire\Checkout\Payment\Method\PaymentPopup">
         <arguments>
-            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
+            <argument name="sessionCheckout" xsi:type="object">Magento\Checkout\Model\Session</argument>
+            <argument name="quoteRepository" xsi:type="object">Magento\Quote\Api\CartRepositoryInterface</argument>
         </arguments>
     </type>
+
 </config>

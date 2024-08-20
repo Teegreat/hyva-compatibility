@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.payment.methods">
+            <block name="checkout.payment.method.bitrail_gateway"
+                   as="bitrial_gateway"
+                   template="BitRail_HyvaCheckout::component/payment/method/bitrail_gateway.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        BitRail\HyvaCheckout\Magewire\Checkout\Payment\Method\PaymentPopup
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

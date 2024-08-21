@@ -6,7 +6,7 @@ namespace BitRail\HyvaCheckout\Block\Checkout\Payment;
 
 use Magento\Framework\View\Element\Template;
 
-class Issuer extends Template
+class Payment extends Template
 {
     public function __construct(
         Template\Context $context,
@@ -17,6 +17,6 @@ class Issuer extends Template
 
     public function getTemplate(): string
     {
-        return 'BitRail_HyvaCheckout::component/payment/method/issuer/bitrail.phtml';
+        return 'BitRail_HyvaCheckout::payment/form.phtml';
     }
 }

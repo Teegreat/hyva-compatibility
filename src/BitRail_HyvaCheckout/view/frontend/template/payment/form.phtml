@@ -1,0 +1,111 @@
+<div x-data="{ 
+        selectedPaymentMethod: '', 
+        orderPopup() { 
+            fetch(`/bitrail_gateway_api/order/getinfo?nonceCode=${window.checkoutConfig.payment.bitrail_gateway.nonceCode}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(response => {
+                if (response.success && response.data.authToken) {
+                    // Inject the iframe into a modal
+                    const modal = document.createElement('div');
+                    modal.id = 'ordersmodal';
+                    modal.className = 'order-payment-modal modal-inner-wrap'; // Add classes here
+                    document.body.appendChild(modal);
+
+                    window.BitRail.init(response.data.authToken, {
+                        api_url: window.checkoutConfig.payment.bitrail_gateway.apiUrl,
+                        parent_element: document.getElementById('ordersmodal'),
+                        frame_attributes: {style: null}
+                    });
+
+                    window.BitRail.order(
+                        response.data.orderToken,
+                        response.data.destinationVaultHandle,
+                        parseFloat(window.checkoutConfig.totalsData.grand_total).toFixed(2),
+                        'USD',
+                        response.data.description,
+                        this.prepareOrderInformation(response.data.orderNumber),
+                        this.orderCallback
+                    );
+                } else {
+                    alert(response.data.message);
+                }
+            })
+            .catch(() => {
+                alert('Sorry, something went wrong. Please try again later.');
+            });
+        },
+        prepareOrderInformation(orderId) {
+            const quote = window.checkoutConfig.quoteData;
+            const shippingAddress = window.checkoutConfig.shippingAddress;
+            const billingAddress = window.checkoutConfig.billingAddress;
+            const items = window.checkoutConfig.totalsData.items;
+
+            const orderInfo = {
+                'OrderID': orderId,
+                'Customer last name': quote.customer_lastname,
+                'Customer first name': quote.customer_firstname,
+                'Customer email': quote.customer_email,
+                'Shipping address': `${shippingAddress.firstname} ${shippingAddress.lastname}, ${shippingAddress.street.join(' ')}, ${shippingAddress.city}, ${shippingAddress.region}, ${shippingAddress.postcode}, ${shippingAddress.countryId}`,
+                'Shipping phone': shippingAddress.telephone,
+                'Shipping total': shippingAddress.shipping_incl_tax.toFixed(2),
+                'Billing address': `${billingAddress.firstname} ${billingAddress.lastname}, ${billingAddress.street.join(' ')}, ${billingAddress.city}, ${billingAddress.region}, ${billingAddress.postcode}, ${billingAddress.countryId}`,
+                'Billing phone': billingAddress.telephone,
+            };
+
+            items.forEach((item, index) => {
+                orderInfo[`Item ${index + 1} id`] = `${item.item_id} - ${item.name}`;
+                orderInfo[`Item ${index + 1} price`] = Number(item.price).toFixed(2);
+                orderInfo[`Item ${index + 1} quantity`] = item.qty;
+                orderInfo[`Item ${index + 1} total`] = Number(item.row_total).toFixed(2);
+            });
+
+            return orderInfo;
+        },
+        orderCallback(response) {
+            this.closePopup();
+            switch (response.status) {
+                case 'success':
+                    // Additional logic for successful payment
+                    break;
+                case 'failed':
+                    alert('Payment failed. Please try again later or choose another payment method.');
+                    break;
+                case 'cancelled':
+                default:
+                    console.log(`Payment for order ${response.data.orderNumber} cancelled`);
+                    break;
+            }
+        },
+        closePopup() {
+            const modal = document.getElementById('ordersmodal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+    }" :class="{'_active': selectedPaymentMethod === 'bitrail_gateway'}">
+    <div class="payment-method-title field choice">
+        <input type="radio" name="payment[method]" class="radio" id="bitrail_gateway" value="bitrail_gateway"
+            @click="selectedPaymentMethod = 'bitrail_gateway'" />
+        <label class="label" for="bitrail_gateway">
+            <span x-text="$t('BitRail Payment Gateway')"></span>
+        </label>
+    </div>
+
+    <div class="payment-method-content" x-show="selectedPaymentMethod === 'bitrail_gateway'">
+        <div class="payment-method-billing-address">
+            <!-- Insert billing address form if needed -->
+        </div>
+
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button id="bitrail_gateway_place_order" class="action primary checkout" type="button"
+                    @click="orderPopup" title="Place Order">
+                    <span x-text="$t('Place Order')"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

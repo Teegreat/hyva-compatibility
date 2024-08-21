@@ -5,12 +5,7 @@
         <referenceBlock name="checkout.payment.methods">
             <block name="checkout.payment.method.bitrail_gateway"
                    as="bitrial_gateway"
-                   template="BitRail_HyvaCheckout::component/payment/method/bitrail_gateway.phtml">
-                <arguments>
-                    <argument name="magewire" xsi:type="object">
-                        BitRail\HyvaCheckout\Magewire\Checkout\Payment\Method\PaymentPopup
-                    </argument>
-                </arguments>
+                   template="BitRail_HyvaCheckout::payment/form.phtml">
             </block>
         </referenceBlock>
     </body>

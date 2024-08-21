@@ -1,0 +1,3 @@
+.order-payment-modal .modal-inner-wrap {
+  @apply w-[600px] ml-[-300px];
+}

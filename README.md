@@ -71,3 +71,9 @@ This module provides compatibility between the BitRail payment gateway and the H
   - **src/BitRail_HyvaCheckout/registration.php**
   - **Purpose**: Registers the BitRail Hyvä Checkout module with Magento.
   - **Details**: This file is responsible for registering the `BitRail_HyvaCheckout` module in Magento's system. It uses the `ComponentRegistrar` class to define the module name and its location within the Magento directory structure.
+
+  - **src/BitRail_HyvaCheckout/Magewire/Checkout/Payment/Method/PaymentPopup.php**
+  - **Purpose**: Handles server-side logic related to the BitRail payment process
+  - **Details**: 
+    - Nonce Code Generation: The `PaymentPopup` class includes a method to generate a nonce code securely, which is used during the payment process.
+    - Dependencies: Utilizes Magento's `SessionCheckout` and `CartRepositoryInterface` to retrieve and manage quote-related data.
